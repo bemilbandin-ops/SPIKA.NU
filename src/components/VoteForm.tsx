@@ -27,7 +27,7 @@ export function VoteForm({ eventId, suggestionId }: VoteFormProps) {
   );
 
   return (
-    <form action={formAction} className="grid gap-3">
+    <form action={formAction} className="grid gap-2.5">
       <input type="hidden" name="eventId" value={eventId} />
       <input type="hidden" name="suggestionId" value={suggestionId} />
 
@@ -51,11 +51,11 @@ export function VoteForm({ eventId, suggestionId }: VoteFormProps) {
         />
       </label>
 
-      <fieldset className="grid gap-2">
+      <fieldset className="grid gap-1.5">
         <legend className="ui-label mb-1">
           Din röst
         </legend>
-        <div className="grid grid-cols-3 gap-2 sm:flex sm:flex-wrap sm:gap-3">
+        <div className="grid grid-cols-3 gap-1.5 sm:flex sm:flex-wrap sm:gap-2">
           {(["yes", "maybe", "no"] as const).map((choice) => (
             <label
               key={choice}

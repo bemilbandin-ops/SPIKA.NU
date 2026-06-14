@@ -4,7 +4,11 @@ import { and, desc, eq, inArray, isNull, sql } from "drizzle-orm";
 
 import { getDb } from "@/db";
 import { dateSuggestions, events, votes } from "@/db/schema";
-import { isEventSearchCode } from "@/lib/eventSearch";
+import {
+  isEventSearchCode,
+  isLegacyEventSearchCode
+} from "@/lib/eventSearch";
+import { generateMemorableEventSearchCode } from "@/lib/eventSearchWords";
 import type {
   DateSuggestionRecord,
   EventRecord,
@@ -36,6 +40,7 @@ export type EventWithSuggestions = EventRecord & {
 
 const eventSelection = {
   id: events.id,
+  search_code: events.searchCode,
   title: events.title,
   description: events.description,
   created_at: events.createdAt,
@@ -74,26 +79,46 @@ function throwDataError(action: string, error: unknown): never {
   throw new Error("Något gick fel när planeringsdata skulle sparas.");
 }
 
+function isUniqueConstraintError(
+  error: unknown,
+  constraintName: string
+): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    "constraint_name" in error &&
+    error.code === "23505" &&
+    error.constraint_name === constraintName
+  );
+}
+
 export async function findEventIdBySearchCode(
   searchCode: string
 ): Promise<string | null> {
   const code = searchCode.trim().toLowerCase();
 
   if (!isEventSearchCode(code)) {
-    throw new Error("Ange ett planerings-ID med 8 tecken.");
+    throw new Error("Ange ett giltigt sÃ¶k-ID.");
   }
 
   try {
-    const matches = await getDb()
-      .select({ id: events.id })
-      .from(events)
-      .where(
-        and(
-          sql`left(${events.id}::text, 8) = ${code}`,
-          isNull(events.deletedAt)
-        )
-      )
-      .limit(2);
+    const matches = isLegacyEventSearchCode(code)
+      ? await getDb()
+          .select({ id: events.id })
+          .from(events)
+          .where(
+            and(
+              sql`left(${events.id}::text, 8) = ${code}`,
+              isNull(events.deletedAt)
+            )
+          )
+          .limit(2)
+      : await getDb()
+          .select({ id: events.id })
+          .from(events)
+          .where(and(eq(events.searchCode, code), isNull(events.deletedAt)))
+          .limit(2);
 
     if (matches.length > 1) {
       throw new Error(
@@ -130,31 +155,41 @@ export async function createEvent(input: {
     throw new Error("Tid krävs.");
   }
 
-  try {
-    const createdEvent = await getDb().transaction(async (tx) => {
-      const [event] = await tx
-        .insert(events)
-        .values({ title, description })
-        .returning({ id: events.id });
+  for (let attempt = 0; attempt < 12; attempt += 1) {
+    const searchCode = generateMemorableEventSearchCode();
 
-      if (!event) {
-        throw new Error("Inget planerings-ID returnerades efter sparning.");
-      }
+    try {
+      const createdEvent = await getDb().transaction(async (tx) => {
+        const [event] = await tx
+          .insert(events)
+          .values({ title, description, searchCode })
+          .returning({ id: events.id });
 
-      await tx.insert(dateSuggestions).values({
-        eventId: event.id,
-        date: suggestedDate,
-        time: suggestedTime,
-        suggestedBy: creatorName
+        if (!event) {
+          throw new Error("Inget planerings-ID returnerades efter sparning.");
+        }
+
+        await tx.insert(dateSuggestions).values({
+          eventId: event.id,
+          date: suggestedDate,
+          time: suggestedTime,
+          suggestedBy: creatorName
+        });
+
+        return event;
       });
 
-      return event;
-    });
+      return createdEvent;
+    } catch (error) {
+      if (isUniqueConstraintError(error, "events_search_code_unique")) {
+        continue;
+      }
 
-    return createdEvent;
-  } catch (error) {
-    throwDataError("creating event", error);
+      throwDataError("creating event", error);
+    }
   }
+
+  throw new Error("Det gick inte att skapa ett unikt sÃ¶k-ID. FÃ¶rsÃ¶k igen.");
 }
 
 export async function getEventById(

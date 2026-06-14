@@ -102,7 +102,7 @@ export default async function EventPage({ params }: EventPageProps) {
   const creatorSuggestionTime = creatorSuggestion
     ? formatTime(creatorSuggestion.time)
     : null;
-  const eventSearchCode = getEventSearchCode(event.id);
+  const eventSearchCode = getEventSearchCode(event.id, event.search_code);
   const suggestionSummaries = event.suggestions.map((suggestion) => ({
     suggestion,
     counts: getVoteCounts(suggestion.votes),
@@ -121,14 +121,14 @@ export default async function EventPage({ params }: EventPageProps) {
     : null;
 
   return (
-    <section className="page-frame grid gap-7">
-      <div className="grid gap-4 sm:gap-5 lg:grid-cols-[1fr_minmax(20rem,0.72fr)] lg:items-start">
+    <section className="page-frame grid gap-5 sm:gap-6">
+      <div className="grid gap-3 sm:gap-4 lg:grid-cols-[1fr_minmax(19rem,0.64fr)] lg:items-start">
         <div className="grid gap-3">
-          <h1 className="text-3xl font-extrabold tracking-[-0.045em] text-[var(--foreground)] sm:text-5xl">
+          <h1 className="text-2xl font-extrabold tracking-[-0.045em] text-[var(--foreground)] sm:text-4xl">
             {event.title}
           </h1>
           {event.description ? (
-            <p className="max-w-2xl whitespace-pre-wrap text-base leading-7 text-[var(--foreground)]/80 sm:text-lg sm:leading-8">
+            <p className="max-w-2xl whitespace-pre-wrap text-sm leading-6 text-[var(--foreground)]/80 sm:text-base sm:leading-7">
               {event.description}
             </p>
           ) : null}
@@ -150,10 +150,10 @@ export default async function EventPage({ params }: EventPageProps) {
       </div>
 
       {suggestionSummaries.length ? (
-        <section className="ui-panel grid gap-4 p-4 sm:p-6">
+        <section className="ui-panel grid gap-3 p-3 sm:p-4">
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
-              <h2 className="text-2xl font-extrabold tracking-[-0.04em] text-[var(--foreground)]">
+              <h2 className="text-xl font-extrabold tracking-[-0.04em] text-[var(--foreground)] sm:text-2xl">
                 Röstläge
               </h2>
               <p className="ui-field-copy">
@@ -161,11 +161,11 @@ export default async function EventPage({ params }: EventPageProps) {
               </p>
             </div>
             {leadingSuggestion ? (
-              <p className="rounded-full bg-[var(--accent)] px-3 py-1.5 text-sm font-extrabold text-[var(--accent-foreground)]">
+              <p className="rounded-full bg-[var(--accent)] px-2.5 py-1 text-xs font-extrabold text-[var(--accent-foreground)] sm:text-sm">
                 Leder: {leadingSuggestion.label}
               </p>
             ) : (
-              <p className="rounded-full border border-[var(--border)] bg-[var(--surface-muted)] px-3 py-1.5 text-sm font-extrabold text-[var(--muted)]">
+              <p className="rounded-full border border-[var(--border)] bg-[var(--surface-muted)] px-2.5 py-1 text-xs font-extrabold text-[var(--muted)] sm:text-sm">
                 Inga ja-röster än
               </p>
             )}
@@ -180,7 +180,7 @@ export default async function EventPage({ params }: EventPageProps) {
 
               return (
                 <div
-                  className="grid gap-3 rounded-xl border border-[var(--border)] bg-[var(--surface-muted)]/65 px-3 py-3 sm:grid-cols-[minmax(9rem,0.8fr)_1fr_auto] sm:items-center sm:px-4"
+                  className="grid gap-2 rounded-lg border border-[var(--border)] bg-[var(--surface-muted)]/65 px-2.5 py-2 sm:grid-cols-[minmax(8rem,0.7fr)_1fr_auto] sm:items-center sm:px-3"
                   key={suggestion.id}
                 >
                   <div>
@@ -208,13 +208,13 @@ export default async function EventPage({ params }: EventPageProps) {
         </section>
       ) : null}
 
-      <div className="grid gap-4">
-        <h2 className="text-xl font-extrabold tracking-[-0.04em] text-[var(--foreground)] sm:text-2xl">
+      <div className="grid gap-3">
+        <h2 className="text-lg font-extrabold tracking-[-0.04em] text-[var(--foreground)] sm:text-2xl">
           Datumförslag
         </h2>
 
         {event.suggestions.length ? (
-          <div className="grid gap-4">
+          <div className="grid gap-2.5 sm:gap-3">
             {event.suggestions.map((suggestion) => {
               const counts = getVoteCounts(suggestion.votes);
               const time = formatTime(suggestion.time);
@@ -222,11 +222,11 @@ export default async function EventPage({ params }: EventPageProps) {
               return (
                 <article
                   key={suggestion.id}
-                  className="ui-panel grid gap-5 p-4 sm:p-5 lg:grid-cols-[1fr_minmax(17rem,0.55fr)] lg:items-start"
+                  className="ui-panel grid gap-3 p-3 sm:p-4 lg:grid-cols-[minmax(0,1fr)_minmax(15rem,0.46fr)] lg:items-start"
                 >
-                  <div className="grid gap-2">
+                  <div className="grid gap-1.5">
                     <div>
-                      <h3 className="text-xl font-extrabold tracking-[-0.035em] text-[var(--foreground)] sm:text-2xl">
+                      <h3 className="text-lg font-extrabold tracking-[-0.035em] text-[var(--foreground)] sm:text-xl">
                         {formatDate(suggestion.date)}
                       </h3>
                       {time ? (
@@ -235,43 +235,22 @@ export default async function EventPage({ params }: EventPageProps) {
                         </p>
                       ) : null}
                     </div>
-                    <p className="text-sm text-[var(--muted)]">
+                    <p className="text-xs text-[var(--muted)] sm:text-sm">
                       Föreslaget av {suggestion.suggested_by}
                     </p>
 
-                    <dl className="grid grid-cols-3 gap-0 overflow-hidden rounded-xl border border-[var(--border)] text-center">
-                      <div className="bg-[var(--surface-muted)] px-3 py-3">
-                        <dt className="text-xs font-extrabold uppercase tracking-[0.12em] text-[var(--muted)]">
-                          Ja
-                        </dt>
-                        <dd className="text-xl font-extrabold text-[var(--foreground)]">
-                          {counts.yes}
-                        </dd>
-                      </div>
-                      <div className="border-x border-[var(--border)] bg-[var(--surface-muted)] px-3 py-3">
-                        <dt className="text-xs font-extrabold uppercase tracking-[0.12em] text-[var(--muted)]">
-                          Kanske
-                        </dt>
-                        <dd className="text-xl font-extrabold text-[var(--foreground)]">
-                          {counts.maybe}
-                        </dd>
-                      </div>
-                      <div className="bg-[var(--surface-muted)] px-3 py-3">
-                        <dt className="text-xs font-extrabold uppercase tracking-[0.12em] text-[var(--muted)]">
-                          Nej
-                        </dt>
-                        <dd className="text-xl font-extrabold text-[var(--foreground)]">
-                          {counts.no}
-                        </dd>
-                      </div>
-                    </dl>
+                    <p className="flex flex-wrap gap-x-3 gap-y-1 text-xs font-bold text-[var(--muted)] sm:text-sm">
+                      <span>{counts.yes} ja</span>
+                      <span>{counts.maybe} kanske</span>
+                      <span>{counts.no} nej</span>
+                    </p>
 
                     {suggestion.votes.length ? (
-                      <div className="grid gap-2 text-sm text-[var(--muted)]">
+                      <div className="grid gap-1 text-xs text-[var(--muted)] sm:text-sm">
                         <h4 className="font-extrabold uppercase tracking-[0.1em] text-[var(--foreground)]">
                           Röster
                         </h4>
-                        <ul className="grid gap-1 sm:grid-cols-2">
+                        <ul className="flex flex-wrap gap-x-3 gap-y-1">
                           {suggestion.votes.map((vote) => (
                             <li key={vote.id}>
                               {vote.voter_name}: {voteLabels[vote.choice]}

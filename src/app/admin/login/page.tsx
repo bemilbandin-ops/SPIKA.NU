@@ -20,19 +20,19 @@ export default async function AdminLoginPage({
   const hasError = params?.error === "invalid";
 
   return (
-    <section className="page-frame grid max-w-md content-start gap-6">
+    <section className="page-frame grid max-w-md content-start gap-5">
       <div className="grid gap-3">
-        <h1 className="text-3xl font-extrabold tracking-[-0.045em] text-[var(--foreground)] sm:text-4xl">
+        <h1 className="text-2xl font-extrabold tracking-[-0.045em] text-[var(--foreground)] sm:text-4xl">
           Logga in
         </h1>
-        <p className="text-base leading-7 text-[var(--foreground)]/78">
+        <p className="text-sm leading-6 text-[var(--foreground)]/78 sm:text-base sm:leading-7">
           Administrera aktiva planeringar och arkivera sådant som är klart.
         </p>
       </div>
 
       <form
         action={loginAction}
-        className="ui-panel grid gap-5 p-4 sm:p-6"
+        className="ui-panel grid gap-4 p-3 sm:p-4"
       >
         <label className="ui-label">
           Lösenord

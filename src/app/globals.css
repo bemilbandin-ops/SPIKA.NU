@@ -72,7 +72,7 @@ textarea {
   border: 1px solid var(--border);
   border-radius: 0.75rem;
   background: color-mix(in srgb, var(--surface) 92%, white);
-  box-shadow: var(--shadow-soft);
+  box-shadow: 0 1rem 2.5rem rgba(36, 48, 38, 0.1);
 }
 
 .ui-button {
@@ -82,10 +82,10 @@ textarea {
   justify-content: center;
   gap: 0.5rem;
   border: 1px solid transparent;
-  border-radius: 0.625rem;
-  padding: 0.7rem 1rem;
+  border-radius: 0.55rem;
+  padding: 0.58rem 0.85rem;
   font-weight: 700;
-  line-height: 1;
+  line-height: 1.05;
   transition:
     background-color 160ms ease,
     border-color 160ms ease,
@@ -94,8 +94,8 @@ textarea {
 }
 
 .ui-button-lg {
-  border-radius: 0.7rem;
-  padding: 1rem 1.25rem;
+  border-radius: 0.62rem;
+  padding: 0.78rem 1rem;
   font-size: 1rem;
 }
 
@@ -141,10 +141,10 @@ textarea {
   width: 100%;
   min-width: 0;
   border: 1px solid var(--border);
-  border-radius: 0.625rem;
+  border-radius: 0.55rem;
   background: color-mix(in srgb, var(--surface) 88%, white);
   color: var(--foreground);
-  padding: 0.7rem 0.85rem;
+  padding: 0.6rem 0.75rem;
 }
 
 .ui-input::placeholder {
@@ -175,10 +175,10 @@ textarea {
 
 .ui-note {
   border: 1px solid color-mix(in srgb, var(--rose) 38%, var(--border));
-  border-radius: 0.625rem;
+  border-radius: 0.55rem;
   background: color-mix(in srgb, var(--surface-clay) 34%, var(--surface));
   color: var(--foreground);
-  padding: 0.85rem 1rem;
+  padding: 0.65rem 0.8rem;
 }
 
 .ui-row {
@@ -186,23 +186,23 @@ textarea {
   min-width: 0;
   max-width: 100%;
   border: 1px solid var(--border);
-  border-radius: 0.75rem;
+  border-radius: 0.65rem;
   background: color-mix(in srgb, var(--surface) 74%, var(--surface-muted));
   color: var(--foreground);
-  padding: 1rem;
+  padding: 0.75rem;
 }
 
 .ui-error {
   border: 1px solid #e0b2ac;
-  border-radius: 0.625rem;
+  border-radius: 0.55rem;
   background: #f4dfdb;
   color: #83362f;
-  padding: 0.75rem 0.9rem;
+  padding: 0.65rem 0.8rem;
 }
 
 .vote-chip {
   display: inline-flex;
-  min-width: 5.3rem;
+  min-width: 4.6rem;
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
@@ -210,8 +210,8 @@ textarea {
   border-radius: 999px;
   background: color-mix(in srgb, var(--surface-muted) 72%, white);
   color: var(--foreground);
-  padding: 0.72rem 1rem;
-  font-size: 0.95rem;
+  padding: 0.58rem 0.8rem;
+  font-size: 0.9rem;
   font-weight: 700;
   line-height: 1;
   transition:
@@ -244,17 +244,17 @@ textarea {
 
 .page-frame {
   margin-inline: auto;
-  width: calc(100vw - 1.5rem);
-  max-width: calc(100vw - 1.5rem);
-  padding-block: 2.25rem 3rem;
+  width: calc(100vw - 1rem);
+  max-width: calc(100vw - 1rem);
+  padding-block: 1.35rem 2rem;
 }
 
 @media (min-width: 640px) {
   .page-frame {
     margin-inline: auto;
-    width: calc(100% - 4rem);
-    max-width: 72rem;
-    padding-block: 4.5rem 5rem;
+    width: calc(100% - 3rem);
+    max-width: 68rem;
+    padding-block: 2.75rem 3.5rem;
   }
 }
 
@@ -265,25 +265,26 @@ textarea {
   }
 
   .ui-panel {
-    width: calc(100% - 2.5rem);
+    width: 100%;
   }
 
   .ui-input {
-    width: calc(100% - 2rem);
+    width: 100%;
   }
 
   .ui-button {
-    min-height: 2.85rem;
+    min-height: 2.5rem;
   }
 
   .ui-button.mobile-full,
   .ui-button.w-full {
-    width: calc(100% - 3rem);
+    width: 100%;
   }
 
   .vote-chip {
     min-width: 0;
-    padding-inline: 0.7rem;
+    padding: 0.5rem 0.62rem;
+    font-size: 0.84rem;
   }
 
   .mobile-full {
