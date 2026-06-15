@@ -36,7 +36,7 @@ export async function searchEventAction(
     const query = normalizeEventSearchInput(readString(formData, "eventSearch"));
 
     if (!query) {
-      throw new Error("Ange ett planerings-ID.");
+      throw new Error("Ange ett sök-ID.");
     }
 
     if (isEventUuid(query)) {
@@ -44,7 +44,9 @@ export async function searchEventAction(
     } else if (isEventSearchCode(query)) {
       eventId = await findEventIdBySearchCode(query);
     } else {
-      throw new Error("Ange ett planerings-ID med 8 tecken eller en fullständig planerings-URL.");
+      throw new Error(
+        "Ange ett sök-ID som sassy-pigeon-36 eller en fullständig planerings-URL."
+      );
     }
 
     if (!eventId) {

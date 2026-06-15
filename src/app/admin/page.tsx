@@ -20,13 +20,13 @@ export default async function AdminPage() {
   const events = await listRecentEventsForAdmin();
 
   return (
-    <section className="page-frame grid gap-7">
-      <div className="flex flex-wrap items-start justify-between gap-4">
+    <section className="page-frame grid gap-5">
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="grid gap-3">
-          <h1 className="text-3xl font-extrabold tracking-[-0.045em] text-[var(--foreground)] sm:text-5xl">
+          <h1 className="text-2xl font-extrabold tracking-[-0.045em] text-[var(--foreground)] sm:text-4xl">
             Senaste planeringarna
           </h1>
-          <p className="text-base leading-7 text-[var(--foreground)]/78">
+          <p className="text-sm leading-6 text-[var(--foreground)]/78 sm:text-base sm:leading-7">
             En enkel översikt över aktiva planeringslänkar.
           </p>
         </div>
@@ -42,10 +42,10 @@ export default async function AdminPage() {
       </div>
 
       {events.length ? (
-        <div className="grid gap-3">
+        <div className="grid gap-2.5">
           {events.map((event) => (
             <article
-              className="ui-row grid gap-4 md:grid-cols-[1fr_auto] md:items-center"
+              className="ui-row grid gap-3 md:grid-cols-[1fr_auto] md:items-center"
               key={event.id}
             >
               <div className="grid gap-2">

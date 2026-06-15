@@ -35,9 +35,9 @@ export function SearchEventForm({ variant = "default" }: SearchEventFormProps) {
           id="eventSearch"
           name="eventSearch"
           type="search"
-          placeholder="Ange planerings-ID eller URL"
+          placeholder="Ange sök-ID eller URL"
           autoComplete="off"
-          className="ui-input min-h-14 text-base"
+          className="ui-input min-h-11 text-base"
         />
         {state.error ? (
           <p className="ui-error text-sm font-semibold" role="alert">
@@ -49,7 +49,7 @@ export function SearchEventForm({ variant = "default" }: SearchEventFormProps) {
       <button
         type="submit"
         disabled={isPending}
-        className="ui-button ui-button-secondary mobile-full min-h-14 px-6 sm:w-auto"
+        className="ui-button ui-button-secondary mobile-full min-h-11 px-5 sm:w-auto"
       >
         {isPending ? "Söker..." : "Hitta"}
       </button>

@@ -20,7 +20,7 @@ export function CreateEventForm() {
   return (
     <form
       action={formAction}
-      className="ui-panel grid gap-5 p-4 sm:p-6"
+      className="ui-panel grid gap-4 p-3 sm:p-4"
     >
       {state.error ? (
         <p
@@ -66,7 +66,7 @@ export function CreateEventForm() {
         />
       </label>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-3 sm:grid-cols-2">
         <label className="ui-label">
           Föreslaget datum
           <input

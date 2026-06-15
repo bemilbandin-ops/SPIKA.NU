@@ -25,7 +25,7 @@ export function ShareLink({ path, searchCode }: ShareLinkProps) {
   }
 
   return (
-    <div className="ui-panel relative grid gap-4 p-4 sm:grid-cols-[1fr_auto] sm:items-end">
+    <div className="ui-panel relative grid gap-3 p-3 sm:grid-cols-[1fr_auto] sm:items-end sm:p-4">
       {searchCode ? (
         <span className="w-fit rounded-full border border-[var(--border)] bg-[var(--surface-muted)] px-2.5 py-1 text-[0.65rem] font-extrabold uppercase tracking-[0.08em] text-[var(--muted)] sm:absolute sm:right-3 sm:top-3">
           Sök-ID: {searchCode}

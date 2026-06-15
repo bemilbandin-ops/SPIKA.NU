@@ -1,0 +1,331 @@
+{
+  "id": "9f5032a2-0cf2-48e4-bf1e-43ae2d5ca0ad",
+  "prevId": "8ec8aa97-0426-4f25-ad29-810f44f1abad",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.date_suggestions": {
+      "name": "date_suggestions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "event_id": {
+          "name": "event_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "date": {
+          "name": "date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "time": {
+          "name": "time",
+          "type": "time",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "suggested_by": {
+          "name": "suggested_by",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "date_suggestions_event_id_idx": {
+          "name": "date_suggestions_event_id_idx",
+          "columns": [
+            {
+              "expression": "event_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "date_suggestions_date_idx": {
+          "name": "date_suggestions_date_idx",
+          "columns": [
+            {
+              "expression": "date",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "date_suggestions_event_id_events_id_fk": {
+          "name": "date_suggestions_event_id_events_id_fk",
+          "tableFrom": "date_suggestions",
+          "tableTo": "events",
+          "columnsFrom": [
+            "event_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "date_suggestions_suggested_by_length_check": {
+          "name": "date_suggestions_suggested_by_length_check",
+          "value": "char_length(\"date_suggestions\".\"suggested_by\") between 1 and 80"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.events": {
+      "name": "events",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "search_code": {
+          "name": "search_code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "events_created_at_idx": {
+          "name": "events_created_at_idx",
+          "columns": [
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "events_deleted_at_idx": {
+          "name": "events_deleted_at_idx",
+          "columns": [
+            {
+              "expression": "deleted_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "events_search_code_idx": {
+          "name": "events_search_code_idx",
+          "columns": [
+            {
+              "expression": "search_code",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "events_search_code_unique": {
+          "name": "events_search_code_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "search_code"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "events_title_length_check": {
+          "name": "events_title_length_check",
+          "value": "char_length(\"events\".\"title\") between 1 and 120"
+        },
+        "events_description_length_check": {
+          "name": "events_description_length_check",
+          "value": "\"events\".\"description\" is null or char_length(\"events\".\"description\") <= 500"
+        },
+        "events_search_code_format_check": {
+          "name": "events_search_code_format_check",
+          "value": "\"events\".\"search_code\" is null or \"events\".\"search_code\" ~ '^[a-z]+-[a-z]+-[0-9]{2}$'"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.votes": {
+      "name": "votes",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "suggestion_id": {
+          "name": "suggestion_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "voter_name": {
+          "name": "voter_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "choice": {
+          "name": "choice",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "votes_suggestion_id_idx": {
+          "name": "votes_suggestion_id_idx",
+          "columns": [
+            {
+              "expression": "suggestion_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "votes_suggestion_id_date_suggestions_id_fk": {
+          "name": "votes_suggestion_id_date_suggestions_id_fk",
+          "tableFrom": "votes",
+          "tableTo": "date_suggestions",
+          "columnsFrom": [
+            "suggestion_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "votes_suggestion_id_voter_name_unique": {
+          "name": "votes_suggestion_id_voter_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "suggestion_id",
+            "voter_name"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "votes_voter_name_length_check": {
+          "name": "votes_voter_name_length_check",
+          "value": "char_length(\"votes\".\"voter_name\") between 1 and 80"
+        },
+        "votes_choice_check": {
+          "name": "votes_choice_check",
+          "value": "\"votes\".\"choice\" in ('yes', 'maybe', 'no')"
+        }
+      },
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

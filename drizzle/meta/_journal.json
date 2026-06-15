@@ -8,6 +8,27 @@
       "when": 1781055496658,
       "tag": "0000_old_thunderbolts",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1781456130130,
+      "tag": "0001_tranquil_lockheed",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1781548800000,
+      "tag": "0002_soft_rocket",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1781635200000,
+      "tag": "0003_tidy_search_code_index",
+      "breakpoints": true
     }
   ]
 }

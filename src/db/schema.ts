@@ -15,6 +15,7 @@ export const events = pgTable(
   "events",
   {
     id: uuid("id").primaryKey().defaultRandom(),
+    searchCode: text("search_code"),
     title: text("title").notNull(),
     description: text("description"),
     createdAt: timestamp("created_at", { withTimezone: true })
@@ -31,8 +32,13 @@ export const events = pgTable(
       "events_description_length_check",
       sql`${table.description} is null or char_length(${table.description}) <= 500`
     ),
+    check(
+      "events_search_code_format_check",
+      sql`${table.searchCode} is null or ${table.searchCode} ~ '^[a-z]+-[a-z]+-[0-9]{2}$'`
+    ),
     index("events_created_at_idx").on(table.createdAt),
-    index("events_deleted_at_idx").on(table.deletedAt)
+    index("events_deleted_at_idx").on(table.deletedAt),
+    unique("events_search_code_unique").on(table.searchCode)
   ]
 );
 

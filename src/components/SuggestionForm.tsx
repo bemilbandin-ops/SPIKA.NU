@@ -24,12 +24,12 @@ export function SuggestionForm({ eventId }: SuggestionFormProps) {
   return (
     <form
       action={formAction}
-      className="ui-panel grid gap-5 p-4 sm:p-6"
+      className="ui-panel grid gap-4 p-3 sm:p-4"
     >
       <input type="hidden" name="eventId" value={eventId} />
 
       <div className="grid gap-1">
-        <h2 className="text-2xl font-extrabold tracking-[-0.035em] text-[var(--foreground)]">
+        <h2 className="text-xl font-extrabold tracking-[-0.035em] text-[var(--foreground)] sm:text-2xl">
           Föreslå ett annat datum
         </h2>
         <p className="ui-field-copy">
@@ -57,7 +57,7 @@ export function SuggestionForm({ eventId }: SuggestionFormProps) {
         />
       </label>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-3 sm:grid-cols-2">
         <label className="ui-label">
           Datum
           <input

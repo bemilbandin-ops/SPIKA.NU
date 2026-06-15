@@ -3,7 +3,7 @@ import "server-only";
 import { and, eq, isNull } from "drizzle-orm";
 
 import { getDb } from "@/db";
-import { dateSuggestions, events } from "@/db/schema";
+import { dateSuggestions, events, votes } from "@/db/schema";
 import {
   getValidatedValue,
   validateDate,
@@ -31,30 +31,43 @@ export async function addDateSuggestion(input: {
   const time = getValidatedValue(validateTime(input.time));
   const suggestedBy = getValidatedValue(validateName(input.suggestedBy));
 
-  let eventExists = false;
-
   try {
-    const [event] = await getDb()
-      .select({ id: events.id })
-      .from(events)
-      .where(and(eq(events.id, eventId), isNull(events.deletedAt)))
-      .limit(1);
+    await getDb().transaction(async (tx) => {
+      const [event] = await tx
+        .select({ id: events.id })
+        .from(events)
+        .where(and(eq(events.id, eventId), isNull(events.deletedAt)))
+        .limit(1);
 
-    eventExists = Boolean(event);
-  } catch (error) {
-    throwDataError("verifying event before adding suggestion", error);
-  }
+      if (!event) {
+        throw new Error("Planeringen hittades inte.");
+      }
 
-  if (!eventExists) {
-    throw new Error("Planeringen hittades inte.");
-  }
+      const [suggestion] = await tx
+        .insert(dateSuggestions)
+        .values({
+          eventId,
+          date,
+          time,
+          suggestedBy
+        })
+        .returning({ id: dateSuggestions.id });
 
-  try {
-    await getDb().insert(dateSuggestions).values({
-      eventId,
-      date,
-      time,
-      suggestedBy
+      if (!suggestion) {
+        throw new Error("Inget datumförslag returnerades efter sparning.");
+      }
+
+      await tx
+        .insert(votes)
+        .values({
+          suggestionId: suggestion.id,
+          voterName: suggestedBy,
+          choice: "yes"
+        })
+        .onConflictDoUpdate({
+          target: [votes.suggestionId, votes.voterName],
+          set: { choice: "yes" }
+        });
     });
   } catch (error) {
     throwDataError("adding date suggestion", error);

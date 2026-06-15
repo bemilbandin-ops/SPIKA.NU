@@ -2,6 +2,7 @@ export type VoteChoice = "yes" | "maybe" | "no";
 
 export type EventRecord = {
   id: string;
+  search_code: string | null;
   title: string;
   description: string | null;
   created_at: Date;
