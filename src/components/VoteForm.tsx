@@ -27,40 +27,34 @@ export function VoteForm({ eventId, suggestionId }: VoteFormProps) {
   );
 
   return (
-    <form action={formAction} className="grid gap-2.5">
+    <form action={formAction} className="grid gap-2">
       <input type="hidden" name="eventId" value={eventId} />
       <input type="hidden" name="suggestionId" value={suggestionId} />
 
       {state.error ? (
-        <p
-          className="ui-error text-sm"
-          role="alert"
-        >
+        <p className="ui-error text-sm" role="alert">
           {state.error}
         </p>
       ) : null}
 
-      <label className="ui-label">
+      <label className="ui-label text-[0.7rem]">
         Ditt namn
         <input
           type="text"
           name="voterName"
           required
           maxLength={80}
-          className="ui-input text-base normal-case tracking-normal"
+          className="ui-input py-2 text-sm normal-case tracking-normal"
         />
       </label>
 
-      <fieldset className="grid gap-1.5">
-        <legend className="ui-label mb-1">
+      <fieldset className="grid gap-1">
+        <legend className="ui-label mb-0.5 text-[0.7rem]">
           Din röst
         </legend>
-        <div className="grid grid-cols-3 gap-1.5 sm:flex sm:flex-wrap sm:gap-2">
+        <div className="grid grid-cols-3 gap-1 sm:flex sm:flex-wrap sm:gap-1.5">
           {(["yes", "maybe", "no"] as const).map((choice) => (
-            <label
-              key={choice}
-              className="vote-chip min-w-0"
-            >
+            <label key={choice} className="vote-chip min-w-0">
               <input type="radio" name="choice" value={choice} required />
               {voteLabels[choice]}
             </label>

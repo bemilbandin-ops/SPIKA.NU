@@ -169,12 +169,31 @@ export async function createEvent(input: {
           throw new Error("Inget planerings-ID returnerades efter sparning.");
         }
 
-        await tx.insert(dateSuggestions).values({
+        const [suggestion] = await tx
+          .insert(dateSuggestions)
+          .values({
           eventId: event.id,
           date: suggestedDate,
           time: suggestedTime,
           suggestedBy: creatorName
-        });
+        })
+          .returning({ id: dateSuggestions.id });
+
+        if (!suggestion) {
+          throw new Error("Inget datumförslag returnerades efter sparning.");
+        }
+
+        await tx
+          .insert(votes)
+          .values({
+            suggestionId: suggestion.id,
+            voterName: creatorName,
+            choice: "yes"
+          })
+          .onConflictDoUpdate({
+            target: [votes.suggestionId, votes.voterName],
+            set: { choice: "yes" }
+          });
 
         return event;
       });
