@@ -45,7 +45,7 @@ export async function searchEventAction(
       eventId = await findEventIdBySearchCode(query);
     } else {
       throw new Error(
-        "Ange ett sök-ID som sassy-pigeon eller en fullständig planerings-URL."
+        "Ange ett sök-ID som sassy-pigeon-36 eller en fullständig planerings-URL."
       );
     }
 

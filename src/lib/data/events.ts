@@ -1,13 +1,10 @@
 import "server-only";
 
-import { and, desc, eq, inArray, isNull, sql } from "drizzle-orm";
+import { and, desc, eq, inArray, isNull } from "drizzle-orm";
 
 import { getDb } from "@/db";
 import { dateSuggestions, events, votes } from "@/db/schema";
-import {
-  isEventSearchCode,
-  isLegacyEventSearchCode
-} from "@/lib/eventSearch";
+import { isEventSearchCode } from "@/lib/eventSearch";
 import { generateMemorableEventSearchCode } from "@/lib/eventSearchWords";
 import type {
   DateSuggestionRecord,
@@ -99,26 +96,15 @@ export async function findEventIdBySearchCode(
   const code = searchCode.trim().toLowerCase();
 
   if (!isEventSearchCode(code)) {
-    throw new Error("Ange ett giltigt sÃ¶k-ID.");
+    throw new Error("Ange ett giltigt sök-ID.");
   }
 
   try {
-    const matches = isLegacyEventSearchCode(code)
-      ? await getDb()
-          .select({ id: events.id })
-          .from(events)
-          .where(
-            and(
-              sql`left(${events.id}::text, 8) = ${code}`,
-              isNull(events.deletedAt)
-            )
-          )
-          .limit(2)
-      : await getDb()
-          .select({ id: events.id })
-          .from(events)
-          .where(and(eq(events.searchCode, code), isNull(events.deletedAt)))
-          .limit(2);
+    const matches = await getDb()
+      .select({ id: events.id })
+      .from(events)
+      .where(and(eq(events.searchCode, code), isNull(events.deletedAt)))
+      .limit(2);
 
     if (matches.length > 1) {
       throw new Error(
@@ -208,7 +194,7 @@ export async function createEvent(input: {
     }
   }
 
-  throw new Error("Det gick inte att skapa ett unikt sÃ¶k-ID. FÃ¶rsÃ¶k igen.");
+  throw new Error("Det gick inte att skapa ett unikt sök-ID. Försök igen.");
 }
 
 export async function getEventById(

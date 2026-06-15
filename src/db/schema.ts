@@ -34,11 +34,10 @@ export const events = pgTable(
     ),
     check(
       "events_search_code_format_check",
-      sql`${table.searchCode} is null or ${table.searchCode} ~ '^[a-z]+-[a-z]+$'`
+      sql`${table.searchCode} is null or ${table.searchCode} ~ '^[a-z]+-[a-z]+-[0-9]{2}$'`
     ),
     index("events_created_at_idx").on(table.createdAt),
     index("events_deleted_at_idx").on(table.deletedAt),
-    index("events_search_code_idx").on(table.searchCode),
     unique("events_search_code_unique").on(table.searchCode)
   ]
 );

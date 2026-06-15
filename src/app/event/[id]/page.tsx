@@ -97,7 +97,7 @@ export default async function EventPage({ params }: EventPageProps) {
   const creatorSuggestionTime = creatorSuggestion
     ? formatTime(creatorSuggestion.time)
     : null;
-  const eventSearchCode = getEventSearchCode(event.id, event.search_code);
+  const eventSearchCode = getEventSearchCode(event.search_code);
   const suggestionSummaries = event.suggestions.map((suggestion) => ({
     suggestion,
     counts: getVoteCounts(suggestion.votes),
