@@ -1,5 +1,5 @@
 {
-  "name": "spika",
+  "name": "pickaday",
   "version": "0.1.0",
   "private": true,
   "engines": {
@@ -10,11 +10,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
+    "test": "tsx --test \"src/**/*.test.ts\"",
     "typecheck": "tsc --noEmit",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
-    "check": "npm run lint && npm run typecheck && npm run build"
+    "check": "npm run lint && npm run typecheck && npm run test && npm run build"
   },
   "dependencies": {
     "drizzle-orm": "^0.45.2",
@@ -32,6 +33,7 @@
     "eslint": "9.39.4",
     "eslint-config-next": "16.2.9",
     "tailwindcss": "4.3.0",
+    "tsx": "^4.22.4",
     "typescript": "6.0.3"
   }
 }

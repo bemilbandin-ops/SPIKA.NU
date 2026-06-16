@@ -1,6 +1,6 @@
-# Spika
+# PickADay
 
-Spika is a simplified group date planner. One person creates an event, shares the private event link, and the group can add date suggestions and vote yes, maybe, or no by name.
+PickADay is a simplified group date planner. One person creates an event, shares the private event link, and the group can add date suggestions and vote yes, maybe, or no by name.
 
 ## What v1 Includes
 
@@ -93,4 +93,4 @@ Admin soft-delete hides an event from its event page and the admin list by setti
 
 ## Privacy Note
 
-Anyone with an event link can view that event's details, names, suggestions, and votes. Do not use Spika for sensitive event details.
+Anyone with an event link can view that event's details, names, suggestions, and votes. Do not use PickADay for sensitive event details.

@@ -18,8 +18,8 @@ type EventPageProps = {
 };
 
 export const metadata: Metadata = {
-  title: "Spika-planering",
-  description: "Visa och rösta i en privat Spika-planering."
+  title: "PickADay-planering",
+  description: "Visa och rösta i en privat PickADay-planering."
 };
 
 function formatDate(date: string): string {
@@ -127,7 +127,7 @@ export default async function EventPage({ params }: EventPageProps) {
         href="/"
         className="ui-button ui-button-secondary w-fit px-3 py-1.5 text-sm font-extrabold tracking-[-0.01em] sm:text-base"
       >
-        Spika!
+        PickADay!
       </Link>
 
       <div className="grid gap-3 sm:gap-4 lg:grid-cols-[1fr_minmax(19rem,0.64fr)] lg:items-start">

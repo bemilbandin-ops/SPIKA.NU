@@ -4,7 +4,7 @@ import { CreateEventForm } from "@/components/CreateEventForm";
 
 export const metadata: Metadata = {
   title: "Skapa planering",
-  description: "Skapa en privat planering i Spika."
+  description: "Skapa en privat planering i PickADay."
 };
 
 export default function CreateEventPage() {

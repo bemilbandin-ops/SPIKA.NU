@@ -70,7 +70,7 @@ export default function HomePage() {
       <div className="mx-auto grid w-[calc(100vw-1rem)] max-w-7xl min-w-0 items-center gap-5 py-4 sm:w-full sm:min-h-[calc(100vh-4.6rem)] sm:gap-8 sm:px-8 sm:py-8 lg:grid-cols-[0.78fr_1.22fr] lg:px-12 lg:py-10">
         <div className="min-w-0 max-w-none lg:max-w-[36rem]">
           <p className="mb-3 text-4xl font-extrabold leading-none tracking-[-0.06em] text-[var(--accent)] sm:mb-6 sm:text-6xl lg:text-7xl">
-            Spika
+            PickADay
           </p>
           <h1 className="max-w-[13ch] text-3xl font-extrabold leading-[1.08] tracking-[-0.055em] text-[var(--foreground)] sm:max-w-[12ch] sm:text-5xl lg:text-6xl">
             Planera enkelt med gruppen
