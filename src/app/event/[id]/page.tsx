@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { BrandHeader } from "@/components/BrandHeader";
 import { ShareLink } from "@/components/ShareLink";
 import { SuggestionForm } from "@/components/SuggestionForm";
 import { VoteSummaryAccordion } from "@/components/VoteSummaryAccordion";
@@ -18,8 +18,8 @@ type EventPageProps = {
 };
 
 export const metadata: Metadata = {
-  title: "Spika-planering",
-  description: "Visa och rösta i en privat Spika-planering."
+  title: "PickADay-planering",
+  description: "Visa och rösta i en privat PickADay-planering."
 };
 
 function formatDate(date: string): string {
@@ -123,12 +123,10 @@ export default async function EventPage({ params }: EventPageProps) {
 
   return (
     <section className="page-frame grid gap-5 sm:gap-6">
-      <Link
-        href="/"
-        className="ui-button ui-button-secondary w-fit px-3 py-1.5 text-sm font-extrabold tracking-[-0.01em] sm:text-base"
-      >
-        Spika!
-      </Link>
+      <BrandHeader
+        className="mb-1 sm:mb-2"
+        logoClassName="w-[21rem] sm:w-[26rem] lg:w-[28rem]"
+      />
 
       <div className="grid gap-3 sm:gap-4 lg:grid-cols-[1fr_minmax(19rem,0.64fr)] lg:items-start">
         <div className="grid gap-3">

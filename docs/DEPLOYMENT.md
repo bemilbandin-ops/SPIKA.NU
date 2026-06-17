@@ -1,6 +1,6 @@
 # Deployment
 
-Use these steps to deploy Spika to Vercel with Neon Postgres.
+Use these steps to deploy PickADay to Vercel with Neon Postgres.
 
 ## 1. Neon Setup
 

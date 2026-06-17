@@ -1,6 +1,6 @@
-# How To Run Spika
+# How To Run PickADay
 
-This guide explains how to run Spika on your own computer so you can inspect the site, and how to publish it online with Vercel and Neon.
+This guide explains how to run PickADay on your own computer so you can inspect the site, and how to publish it online with Vercel and Neon.
 
 ## What You Need
 
@@ -16,7 +16,7 @@ This guide explains how to run Spika on your own computer so you can inspect the
 Open a terminal and go to this folder:
 
 ```text
-D:\Code\vscode\SPika\Spika
+D:\Code\vscode\PickADay
 ```
 
 ### 2. Install the App
@@ -50,7 +50,7 @@ After `DATABASE_URL` is filled in, run:
 npm run db:migrate
 ```
 
-This creates the database tables Spika needs.
+This creates the database tables PickADay needs.
 
 ### 5. Start the Local Site
 
@@ -132,7 +132,7 @@ Do the same inspection steps from the local section:
 
 ## Important Privacy Note
 
-Spika uses private links, not user accounts. Anyone with an event link can view that event's details, names, date suggestions, and votes. Do not put sensitive information in an event.
+PickADay uses private links, not user accounts. Anyone with an event link can view that event's details, names, date suggestions, and votes. Do not put sensitive information in an event.
 
 ## Useful Commands
 

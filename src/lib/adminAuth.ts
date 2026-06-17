@@ -1,13 +1,17 @@
 import "server-only";
 
-import { createHash, createHmac, timingSafeEqual } from "node:crypto";
+import { createHash, timingSafeEqual } from "node:crypto";
 
 import { cookies } from "next/headers";
 
 import { getAdminPassword, getAdminSessionSecret } from "@/lib/env";
+import {
+  SESSION_MAX_AGE_SECONDS,
+  createAdminSessionValue,
+  isValidAdminSessionValue
+} from "@/lib/adminSession";
 
 const ADMIN_SESSION_COOKIE = "spika_admin_session";
-const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 7;
 
 function logAdminAuthError(message: string, error: unknown) {
   console.error(message, {
@@ -40,10 +44,6 @@ function timingSafeStringEqual(left: string, right: string): boolean {
   return timingSafeEqual(leftHash, rightHash);
 }
 
-function signPayload(payload: string, secret: string): string {
-  return createHmac("sha256", secret).update(payload).digest("base64url");
-}
-
 function createSessionValue(): string | null {
   const secret = getSessionSecret();
 
@@ -51,44 +51,17 @@ function createSessionValue(): string | null {
     return null;
   }
 
-  const payload = Buffer.from(
-    JSON.stringify({ sub: "admin", iat: Date.now() }),
-    "utf8"
-  ).toString("base64url");
-  const signature = signPayload(payload, secret);
-
-  return `${payload}.${signature}`;
+  return createAdminSessionValue(secret);
 }
 
 function isValidSessionValue(value: string | undefined): boolean {
-  if (!value) {
-    return false;
-  }
-
-  const [payload, signature, extra] = value.split(".");
-
-  if (!payload || !signature || extra) {
-    return false;
-  }
-
   const secret = getSessionSecret();
 
   if (!secret) {
     return false;
   }
 
-  const expectedSignature = signPayload(payload, secret);
-
-  if (!timingSafeStringEqual(signature, expectedSignature)) {
-    return false;
-  }
-
-  try {
-    const session = JSON.parse(Buffer.from(payload, "base64url").toString());
-    return session?.sub === "admin";
-  } catch {
-    return false;
-  }
+  return isValidAdminSessionValue(value, secret);
 }
 
 export function isCorrectAdminPassword(password: string): boolean {
