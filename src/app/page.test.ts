@@ -8,4 +8,5 @@ test("landing hero keeps the original centered layout while only lifting the log
 
   assert.match(source, /items-center gap-5 py-4/);
   assert.match(source, /sm:relative sm:-top-20 sm:mb-3 lg:-top-24/);
+  assert.match(source, /logoClassName="w-\[16rem\] sm:w-\[24rem\] lg:w-\[34rem\]"/);
 });

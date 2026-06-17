@@ -72,7 +72,7 @@ export default function HomePage() {
         <div className="min-w-0 max-w-none lg:max-w-[36rem]">
           <BrandHeader
             className="mb-1 sm:relative sm:-top-20 sm:mb-3 lg:-top-24"
-            logoClassName="w-[25rem] sm:w-[31rem] lg:w-[34rem]"
+            logoClassName="w-[16rem] sm:w-[24rem] lg:w-[34rem]"
             priority
           />
           <h1 className="max-w-[13ch] text-3xl font-extrabold leading-[1.08] tracking-[-0.055em] text-[var(--foreground)] sm:max-w-[12ch] sm:text-5xl lg:text-6xl">
