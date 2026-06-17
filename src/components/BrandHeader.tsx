@@ -16,7 +16,7 @@ export function BrandHeader({
     <Link
       aria-label="Gå till startsidan"
       className={[
-        "site-background inline-flex w-fit",
+        "inline-flex w-fit",
         className
       ].filter(Boolean).join(" ")}
       href="/"

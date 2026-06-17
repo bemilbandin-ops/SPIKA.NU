@@ -9,7 +9,7 @@ test("BrandHeader renders a clickable home logo", () => {
 
   assert.match(markup, /href="\/"/);
   assert.match(markup, /aria-label="Gå till startsidan"/);
-  assert.match(markup, /class="[^"]*site-background[^"]*"/);
+  assert.doesNotMatch(markup, /site-background/);
   assert.match(markup, /class="[^"]*w-\[20rem\][^"]*sm:w-\[24rem\][^"]*"/);
   assert.match(markup, /src="\/pickaday-logo\.png"/);
   assert.match(markup, /alt="PickADay"/);
