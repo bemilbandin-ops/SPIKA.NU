@@ -80,6 +80,7 @@ web_modules/
 out
 .tmp-*.css
 .tmp-*.html
+.tmp-next-dev.*
 
 # Nuxt.js build / generate output
 .nuxt
