@@ -3,10 +3,10 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import test from "node:test";
 
-test("landing hero keeps the original centered layout while only lifting the logo", () => {
+test("landing page uses a small top-left header logo separate from the centered hero", () => {
   const source = readFileSync(resolve(process.cwd(), "src/app/page.tsx"), "utf8");
 
   assert.match(source, /items-center gap-5 py-4/);
-  assert.match(source, /sm:relative sm:-top-20 sm:mb-3 lg:-top-24/);
-  assert.match(source, /logoClassName="w-\[16rem\] sm:w-\[24rem\] lg:w-\[34rem\]"/);
+  assert.match(source, /absolute left-4 top-4 z-10 sm:left-8 sm:top-6 lg:left-12 lg:top-8/);
+  assert.match(source, /logoClassName="w-\[11rem\] sm:w-\[13rem\] lg:w-\[14rem\]"/);
 });

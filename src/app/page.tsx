@@ -67,14 +67,14 @@ function PreviewVoteChip({
 
 export default function HomePage() {
   return (
-    <section className="relative overflow-hidden">
+    <section className="relative overflow-hidden pt-20 sm:pt-24 lg:pt-0">
+      <BrandHeader
+        className="absolute left-4 top-4 z-10 sm:left-8 sm:top-6 lg:left-12 lg:top-8"
+        logoClassName="w-[11rem] sm:w-[13rem] lg:w-[14rem]"
+        priority
+      />
       <div className="mx-auto grid w-[calc(100vw-1rem)] max-w-7xl min-w-0 items-center gap-5 py-4 sm:w-full sm:min-h-[calc(100vh-4.6rem)] sm:gap-8 sm:px-8 sm:py-8 lg:grid-cols-[0.78fr_1.22fr] lg:px-12 lg:py-10">
         <div className="min-w-0 max-w-none lg:max-w-[36rem]">
-          <BrandHeader
-            className="mb-1 sm:relative sm:-top-20 sm:mb-3 lg:-top-24"
-            logoClassName="w-[16rem] sm:w-[24rem] lg:w-[34rem]"
-            priority
-          />
           <h1 className="max-w-[13ch] text-3xl font-extrabold leading-[1.08] tracking-[-0.055em] text-[var(--foreground)] sm:max-w-[12ch] sm:text-5xl lg:text-6xl">
             Planera enkelt med gruppen
           </h1>
