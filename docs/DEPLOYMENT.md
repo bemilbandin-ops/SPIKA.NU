@@ -36,11 +36,14 @@ NEXT_PUBLIC_SITE_URL=https://your-vercel-domain.example
 DATABASE_URL=your-neon-connection-string
 ADMIN_PASSWORD=your-admin-password
 ADMIN_SESSION_SECRET=your-random-session-secret
+RESEND_API_KEY=your-resend-api-key
+NOTIFICATION_FROM_EMAIL=PickADay <notifications@your-verified-domain.example>
+CRON_SECRET=your-random-cron-secret
 ```
 
 4. Deploy the project.
 
-`NEXT_PUBLIC_SITE_URL` should be the deployed site origin with no trailing slash. Keep `DATABASE_URL`, `ADMIN_PASSWORD`, and `ADMIN_SESSION_SECRET` private.
+`NEXT_PUBLIC_SITE_URL` should be the deployed site origin with no trailing slash. Keep every other value private. Verify the sender domain in Resend before using it in `NOTIFICATION_FROM_EMAIL`. Vercel uses `CRON_SECRET` to authorize the daily digest request.
 
 ## 4. Post-Deploy Smoke Test
 
@@ -49,15 +52,20 @@ ADMIN_SESSION_SECRET=your-random-session-secret
 3. Copy the event link.
 4. Add a date suggestion.
 5. Vote on the suggestion.
-6. Log into `/admin`.
-7. Soft-delete the test event.
-8. Open the deleted event link and confirm it no longer renders.
+6. Subscribe an email address and confirm the subscription succeeds.
+7. Trigger `/api/cron/notification-digests` with `Authorization: Bearer <CRON_SECRET>` after making a new change, then confirm the digest arrives.
+8. Use the email's unsubscribe link.
+9. Log into `/admin`.
+10. Soft-delete the test event.
+11. Open the deleted event link and confirm it no longer renders.
 
 ## 5. Troubleshooting
 
-- Missing env vars: confirm all four required variables are set in Vercel and locally when running migrations.
+- Missing env vars: confirm all seven variables above are set in Vercel.
 - Wrong `DATABASE_URL`: confirm the connection string points to the intended Neon project, database, branch, and role.
 - Migration not run: run `npm run db:migrate` with `DATABASE_URL` set to the deployed Neon database.
 - Admin password not working: confirm `ADMIN_PASSWORD` is set in Vercel, redeploy after changing it, and try again in a fresh browser session.
+- Notifications not sending: confirm the Resend API key and verified sender are correct, and check the Vercel function logs.
+- Cron returns 401: confirm `CRON_SECRET` is set and the request uses the matching bearer token.
 - Build failure: run `npm run check` locally and fix lint, typecheck, or build errors before redeploying.
 - Database connection limit errors: use Neon's pooled connection string for `DATABASE_URL`, reduce concurrent traffic, or move to a larger Neon tier.

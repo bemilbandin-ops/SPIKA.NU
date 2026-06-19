@@ -33,7 +33,12 @@ export async function createEventAction(
       description: readString(formData, "description"),
       creatorName: readString(formData, "creatorName"),
       suggestedDate: readString(formData, "suggestedDate"),
-      suggestedTime: readString(formData, "suggestedTime")
+      suggestedTime: readString(formData, "suggestedTime"),
+      notificationEmail: readString(formData, "notificationEmail"),
+      notificationIntervalHours: readString(
+        formData,
+        "notificationIntervalHours"
+      )
     });
     eventId = event.id;
   } catch (error) {

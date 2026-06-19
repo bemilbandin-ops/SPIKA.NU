@@ -1,6 +1,6 @@
 import "server-only";
 
-import { and, eq, isNull } from "drizzle-orm";
+import { and, eq, isNull, sql } from "drizzle-orm";
 
 import { getDb } from "@/db";
 import { dateSuggestions, events, votes } from "@/db/schema";
@@ -33,43 +33,38 @@ export async function submitVote(input: {
   const voterName = getValidatedValue(validateName(input.voterName));
   const choice = getValidatedValue(validateVoteChoice(input.choice));
 
-  let suggestionBelongsToEvent = false;
-
   try {
-    const [suggestion] = await getDb()
-      .select({ id: dateSuggestions.id })
-      .from(dateSuggestions)
-      .innerJoin(events, eq(dateSuggestions.eventId, events.id))
-      .where(
-        and(
-          eq(dateSuggestions.id, suggestionId),
-          eq(dateSuggestions.eventId, eventId),
-          isNull(events.deletedAt)
+    await getDb().transaction(async (tx) => {
+      const [suggestion] = await tx
+        .select({ id: dateSuggestions.id })
+        .from(dateSuggestions)
+        .innerJoin(events, eq(dateSuggestions.eventId, events.id))
+        .where(
+          and(
+            eq(dateSuggestions.id, suggestionId),
+            eq(dateSuggestions.eventId, eventId),
+            isNull(events.deletedAt)
+          )
         )
-      )
-      .limit(1);
+        .limit(1);
 
-    suggestionBelongsToEvent = Boolean(suggestion);
-  } catch (error) {
-    throwDataError("verifying suggestion before saving vote", error);
-  }
+      if (!suggestion) {
+        throw new Error("Datumförslaget hittades inte för den här planeringen.");
+      }
 
-  if (!suggestionBelongsToEvent) {
-    throw new Error("Datumförslaget hittades inte för den här planeringen.");
-  }
+      await tx
+        .insert(votes)
+        .values({ suggestionId, voterName, choice })
+        .onConflictDoUpdate({
+          target: [votes.suggestionId, votes.voterName],
+          set: { choice }
+        });
 
-  try {
-    await getDb()
-      .insert(votes)
-      .values({
-        suggestionId,
-        voterName,
-        choice
-      })
-      .onConflictDoUpdate({
-        target: [votes.suggestionId, votes.voterName],
-        set: { choice }
-      });
+      await tx
+        .update(events)
+        .set({ notificationActivityAt: sql`now()` })
+        .where(eq(events.id, eventId));
+    });
   } catch (error) {
     throwDataError("submitting vote", error);
   }

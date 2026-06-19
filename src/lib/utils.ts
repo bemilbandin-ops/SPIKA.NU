@@ -14,34 +14,14 @@ export function getVoteCounts(votes: VoteRecord[]): {
   );
 }
 
-function getDateValue(suggestion: unknown): number {
-  if (
-    typeof suggestion === "object" &&
-    suggestion !== null &&
-    "date" in suggestion &&
-    typeof suggestion.date === "string"
-  ) {
-    const timestamp = Date.parse(`${suggestion.date}T00:00:00.000Z`);
-    return Number.isNaN(timestamp) ? Number.POSITIVE_INFINITY : timestamp;
-  }
-
-  return Number.POSITIVE_INFINITY;
-}
-
-export function getSortedSuggestions<T extends { votes: VoteRecord[] }>(
+export function getSortedSuggestions<
+  T extends { date: string; time: string | null; votes: VoteRecord[] }
+>(
   suggestions: T[]
 ): T[] {
   return [...suggestions].sort((a, b) => {
-    const aCounts = getVoteCounts(a.votes);
-    const bCounts = getVoteCounts(b.votes);
-    const aTotal = a.votes.length;
-    const bTotal = b.votes.length;
-
-    return (
-      bCounts.yes - aCounts.yes ||
-      aCounts.no - bCounts.no ||
-      bTotal - aTotal ||
-      getDateValue(a) - getDateValue(b)
-    );
+    const timeA = a.time ?? "99:99";
+    const timeB = b.time ?? "99:99";
+    return a.date.localeCompare(b.date) || timeA.localeCompare(timeB);
   });
 }

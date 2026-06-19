@@ -56,7 +56,7 @@ Use the Neon SQL editor to inspect tables directly, or run Drizzle Studio with `
 npm run db:studio
 ```
 
-Core tables are `events`, `date_suggestions`, and `votes`.
+Core tables are `events`, `date_suggestions`, `votes`, and `event_subscribers`.
 
 ## Known Limitations
 
