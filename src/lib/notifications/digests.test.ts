@@ -56,6 +56,7 @@ test("digest includes vote details and escapes dynamic HTML", () => {
       title: "<Plan & party>",
       description: null,
       created_at: new Date(),
+      voting_closes_at: null,
       deleted_at: null,
       suggestions: [
         {
@@ -104,6 +105,7 @@ test("successful delivery advances both timestamps; failure advances neither", a
     title: "Plan",
     description: null,
     created_at: new Date(),
+    voting_closes_at: null,
     deleted_at: null,
     suggestions: []
   };

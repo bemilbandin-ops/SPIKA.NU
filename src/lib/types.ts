@@ -6,6 +6,7 @@ export type EventRecord = {
   title: string;
   description: string | null;
   created_at: Date;
+  voting_closes_at: Date | null;
   deleted_at: Date | null;
 };
 

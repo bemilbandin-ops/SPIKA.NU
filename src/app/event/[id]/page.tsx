@@ -11,6 +11,10 @@ import { getEventById } from "@/lib/data/events";
 import { getEventSearchCode } from "@/lib/eventSearch";
 import { getVoteCounts } from "@/lib/utils";
 import { validateUuid } from "@/lib/validation";
+import {
+  formatVotingDeadline,
+  isVotingClosed
+} from "@/lib/votingDeadline";
 
 type EventPageProps = {
   params: Promise<{
@@ -117,6 +121,7 @@ export default async function EventPage({ params }: EventPageProps) {
     ? formatTime(creatorSuggestion.time)
     : null;
   const eventSearchCode = getEventSearchCode(event.search_code);
+  const votingClosed = isVotingClosed(event.voting_closes_at);
   const suggestionSummaries = event.suggestions.map((suggestion) => ({
     suggestion,
     counts: getVoteCounts(suggestion.votes),
@@ -159,14 +164,22 @@ export default async function EventPage({ params }: EventPageProps) {
               {event.description}
             </p>
           ) : null}
-          {creatorSuggestion ? (
-            <p className="ui-note text-sm font-semibold sm:w-fit">
-              Skapat av {creatorSuggestion.suggested_by}:{" "}
-              {formatDate(creatorSuggestion.date)}
-              {` (${formatWeek(creatorSuggestion.date)})`}
-              {creatorSuggestionTime ? ` kl. ${creatorSuggestionTime}` : ""}
-            </p>
-          ) : null}
+          <div className="grid gap-1 sm:w-fit">
+            {creatorSuggestion ? (
+              <p className="ui-note text-sm font-semibold">
+                Skapat av {creatorSuggestion.suggested_by}:{" "}
+                {formatDate(creatorSuggestion.date)}
+                {` (${formatWeek(creatorSuggestion.date)})`}
+                {creatorSuggestionTime ? ` kl. ${creatorSuggestionTime}` : ""}
+              </p>
+            ) : null}
+            {event.voting_closes_at ? (
+              <p className="ui-note text-sm font-semibold">
+                Röstningen stänger{" "}
+                {formatVotingDeadline(event.voting_closes_at)}
+              </p>
+            ) : null}
+          </div>
         </div>
 
         <aside
@@ -245,7 +258,13 @@ export default async function EventPage({ params }: EventPageProps) {
                     </p>
                   </div>
 
-                  <VoteForm eventId={event.id} suggestionId={suggestion.id} />
+                  {votingClosed ? (
+                    <p className="ui-note text-sm font-semibold">
+                      Röstningen är stängd.
+                    </p>
+                  ) : (
+                    <VoteForm eventId={event.id} suggestionId={suggestion.id} />
+                  )}
                 </article>
               );
             })}
@@ -257,7 +276,13 @@ export default async function EventPage({ params }: EventPageProps) {
         )}
       </div>
 
-      <SuggestionForm eventId={event.id} />
+      {votingClosed ? (
+        <p className="ui-panel p-4 text-sm font-semibold">
+          Röstningen är stängd.
+        </p>
+      ) : (
+        <SuggestionForm eventId={event.id} />
+      )}
     </section>
   );
 }

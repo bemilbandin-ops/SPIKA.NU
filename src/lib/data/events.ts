@@ -18,6 +18,7 @@ import type {
   VoteRecord
 } from "@/lib/types";
 import { getSortedSuggestions } from "@/lib/utils";
+import { parseVotingDeadline } from "@/lib/votingDeadline";
 import {
   getValidatedValue,
   validateDate,
@@ -48,6 +49,7 @@ const eventSelection = {
   title: events.title,
   description: events.description,
   created_at: events.createdAt,
+  voting_closes_at: events.votingClosesAt,
   deleted_at: events.deletedAt
 };
 
@@ -135,6 +137,7 @@ export async function createEvent(input: {
   creatorName: string;
   suggestedDate: string;
   suggestedTime: string;
+  votingClosesAt?: string;
   notificationEmail?: string | null;
   notificationIntervalHours?: string;
 }): Promise<{ id: string }> {
@@ -145,6 +148,7 @@ export async function createEvent(input: {
   const creatorName = getValidatedValue(validateName(input.creatorName));
   const suggestedDate = getValidatedValue(validateDate(input.suggestedDate));
   const suggestedTime = getValidatedValue(validateTime(input.suggestedTime));
+  const votingClosesAt = parseVotingDeadline(input.votingClosesAt ?? "");
   const notificationEmail = getValidatedValue(
     validateOptionalEmail(input.notificationEmail)
   );
@@ -165,7 +169,7 @@ export async function createEvent(input: {
       const createdEvent = await getDb().transaction(async (tx) => {
         const [event] = await tx
           .insert(events)
-          .values({ title, description, searchCode })
+          .values({ title, description, searchCode, votingClosesAt })
           .returning({ id: events.id });
 
         if (!event) {
