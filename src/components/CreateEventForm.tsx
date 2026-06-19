@@ -68,6 +68,36 @@ export function CreateEventForm() {
 
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="ui-label">
+          E-post för aviseringar (valfritt)
+          <input
+            type="email"
+            name="notificationEmail"
+            maxLength={254}
+            placeholder="alex@example.com"
+            className="ui-input text-base normal-case tracking-normal"
+          />
+        </label>
+
+        <label className="ui-label">
+          Hur ofta
+          <select
+            name="notificationIntervalHours"
+            defaultValue="24"
+            className="ui-input text-base normal-case tracking-normal"
+          >
+            <option value="24">Varje dygn</option>
+            <option value="48">Varannan dag</option>
+            <option value="72">Var tredje dag</option>
+          </select>
+        </label>
+      </div>
+
+      <p className="text-sm text-slate-600">
+        E-post är valfritt och skickas bara när planeringen ändras.
+      </p>
+
+      <div className="grid gap-3 sm:grid-cols-2">
+        <label className="ui-label">
           Föreslaget datum
           <input
             type="date"

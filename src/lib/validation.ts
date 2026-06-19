@@ -8,6 +8,9 @@ export type ValidationResult<T> =
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const TIME_PATTERN = /^([01]\d|2[0-3]):[0-5]\d$/;
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export type NotificationIntervalHours = 24 | 48 | 72;
 
 function ok<T>(value: T): ValidationResult<T> {
   return { ok: true, value };
@@ -132,6 +135,38 @@ export function validateVoteChoice(value: string): ValidationResult<VoteChoice> 
   }
 
   return error("Rösten måste vara ja, kanske eller nej.");
+}
+
+export function validateOptionalEmail(
+  value?: string | null
+): ValidationResult<string | null> {
+  if (value == null) return ok(null);
+
+  const email = value.trim().toLowerCase();
+  if (!email) return ok(null);
+
+  if (email.length > 254 || !EMAIL_PATTERN.test(email)) {
+    return error("Ange en giltig e-postadress eller lämna fältet tomt.");
+  }
+
+  return ok(email);
+}
+
+export function validateRequiredEmail(value: string): ValidationResult<string> {
+  const result = validateOptionalEmail(value);
+  if (!result.ok) return result;
+  return result.value
+    ? ok(result.value)
+    : error("E-postadress krävs.");
+}
+
+export function validateNotificationInterval(
+  value: string
+): ValidationResult<NotificationIntervalHours> {
+  const hours = Number(value);
+  return hours === 24 || hours === 48 || hours === 72
+    ? ok(hours)
+    : error("Välj 24, 48 eller 72 timmar.");
 }
 
 export function validateUuid(

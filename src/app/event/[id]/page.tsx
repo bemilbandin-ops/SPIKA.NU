@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { BrandHeader } from "@/components/BrandHeader";
+import { NotificationSignupForm } from "@/components/NotificationSignupForm";
 import { ShareLink } from "@/components/ShareLink";
 import { SuggestionForm } from "@/components/SuggestionForm";
 import { VoteSummaryAccordion } from "@/components/VoteSummaryAccordion";
@@ -37,6 +38,24 @@ function formatDate(date: string): string {
 
 function formatTime(time: string | null): string | null {
   return time ? time.slice(0, 5) : null;
+}
+
+function getIsoWeekNumber(date: string): number | null {
+  const parsedDate = new Date(`${date}T00:00:00.000Z`);
+  if (Number.isNaN(parsedDate.getTime())) return null;
+
+  parsedDate.setUTCDate(
+    parsedDate.getUTCDate() + 4 - (parsedDate.getUTCDay() || 7)
+  );
+  const yearStart = new Date(Date.UTC(parsedDate.getUTCFullYear(), 0, 1));
+  return Math.ceil(
+    ((parsedDate.getTime() - yearStart.getTime()) / 86400000 + 1) / 7
+  );
+}
+
+function formatWeek(date: string): string {
+  const week = getIsoWeekNumber(date);
+  return week ? `vecka ${week}` : "";
 }
 
 function formatShortDate(date: string): string {
@@ -76,7 +95,7 @@ function getSuggestionLabel(
 ): string {
   const time = formatTime(suggestion.time);
 
-  return `${formatShortDate(suggestion.date)}${time ? ` kl. ${time}` : ""}`;
+  return `${formatShortDate(suggestion.date)} (${formatWeek(suggestion.date)})${time ? ` kl. ${time}` : ""}`;
 }
 
 export default async function EventPage({ params }: EventPageProps) {
@@ -123,12 +142,14 @@ export default async function EventPage({ params }: EventPageProps) {
 
   return (
     <section className="page-frame grid gap-5 sm:gap-6">
-      <BrandHeader
-        className="mb-1 sm:mb-2"
-        logoClassName="w-[21rem] sm:w-[26rem] lg:w-[28rem]"
-      />
-
       <div className="grid gap-3 sm:gap-4 lg:grid-cols-[1fr_minmax(19rem,0.64fr)] lg:items-start">
+        <BrandHeader
+          className="mb-1 sm:mb-2"
+          logoClassName="w-[21rem] sm:w-[26rem] lg:w-[28rem]"
+        />
+
+        <ShareLink path={`/event/${event.id}`} searchCode={eventSearchCode} />
+
         <div className="grid gap-3">
           <h1 className="text-2xl font-extrabold tracking-[-0.045em] text-[var(--foreground)] sm:text-4xl">
             {event.title}
@@ -142,17 +163,21 @@ export default async function EventPage({ params }: EventPageProps) {
             <p className="ui-note text-sm font-semibold sm:w-fit">
               Skapat av {creatorSuggestion.suggested_by}:{" "}
               {formatDate(creatorSuggestion.date)}
+              {` (${formatWeek(creatorSuggestion.date)})`}
               {creatorSuggestionTime ? ` kl. ${creatorSuggestionTime}` : ""}
             </p>
           ) : null}
         </div>
 
-        <div className="grid gap-3">
-          <ShareLink path={`/event/${event.id}`} searchCode={eventSearchCode} />
+        <aside
+          aria-label="Information och aviseringar"
+          className="grid gap-3"
+        >
           <p className="ui-note text-xs font-medium leading-5 text-[var(--foreground)]/78">
             Alla med länken kan se detaljer, namn, datumförslag och röster.
           </p>
-        </div>
+          <NotificationSignupForm eventId={event.id} />
+        </aside>
       </div>
 
       {suggestionSummaries.length ? (
@@ -200,7 +225,7 @@ export default async function EventPage({ params }: EventPageProps) {
                   <div className="grid gap-1">
                     <div className="grid gap-0.5">
                       <h3 className="text-base font-extrabold tracking-[-0.03em] text-[var(--foreground)] sm:text-lg">
-                        {formatDate(suggestion.date)}
+                        {formatDate(suggestion.date)} ({formatWeek(suggestion.date)})
                       </h3>
                       {time ? (
                         <p className="text-xs font-bold uppercase tracking-[0.12em] text-[var(--muted)]">

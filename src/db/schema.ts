@@ -3,6 +3,7 @@ import {
   check,
   date,
   index,
+  integer,
   pgTable,
   text,
   time,
@@ -21,7 +22,10 @@ export const events = pgTable(
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
-    deletedAt: timestamp("deleted_at", { withTimezone: true })
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+    notificationActivityAt: timestamp("notification_activity_at", {
+      withTimezone: true
+    })
   },
   (table) => [
     check(
@@ -39,6 +43,47 @@ export const events = pgTable(
     index("events_created_at_idx").on(table.createdAt),
     index("events_deleted_at_idx").on(table.deletedAt),
     unique("events_search_code_unique").on(table.searchCode)
+  ]
+);
+
+export const eventSubscribers = pgTable(
+  "event_subscribers",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    eventId: uuid("event_id")
+      .notNull()
+      .references(() => events.id, { onDelete: "cascade" }),
+    email: text("email").notNull(),
+    intervalHours: integer("interval_hours").notNull().default(24),
+    lastDigestAt: timestamp("last_digest_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    lastSeenActivityAt: timestamp("last_seen_activity_at", {
+      withTimezone: true
+    })
+      .notNull()
+      .defaultNow(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+  },
+  (table) => [
+    check(
+      "event_subscribers_email_length_check",
+      sql`char_length(${table.email}) between 3 and 254`
+    ),
+    check(
+      "event_subscribers_email_format_check",
+      sql`${table.email} ~* '^[^[:space:]@]+@[^[:space:]@]+\\.[^[:space:]@]+$'`
+    ),
+    check(
+      "event_subscribers_interval_check",
+      sql`${table.intervalHours} in (24, 48, 72)`
+    ),
+    unique("event_subscribers_event_id_email_unique").on(
+      table.eventId,
+      table.email
+    )
   ]
 );
 

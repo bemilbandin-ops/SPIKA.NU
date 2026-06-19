@@ -1,6 +1,6 @@
 import "server-only";
 
-import { and, eq, isNull } from "drizzle-orm";
+import { and, eq, isNull, sql } from "drizzle-orm";
 
 import { getDb } from "@/db";
 import { dateSuggestions, events, votes } from "@/db/schema";
@@ -68,6 +68,11 @@ export async function addDateSuggestion(input: {
           target: [votes.suggestionId, votes.voterName],
           set: { choice: "yes" }
         });
+
+      await tx
+        .update(events)
+        .set({ notificationActivityAt: sql`now()` })
+        .where(eq(events.id, eventId));
     });
   } catch (error) {
     throwDataError("adding date suggestion", error);

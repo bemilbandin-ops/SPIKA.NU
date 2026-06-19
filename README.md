@@ -8,12 +8,13 @@ PickADay is a simplified group date planner. One person creates an event, shares
 - Private event pages available to anyone with the event link.
 - Date suggestions with optional times and the name of the person suggesting them.
 - Votes on each suggestion: yes, maybe, or no.
+- Optional email digests when suggestions or votes change, with 24, 48, or 72-hour intervals and unsubscribe links.
 - A password-protected admin page for viewing recent active events and soft-deleting events.
 
 ## What v1 Does Not Include
 
 - User accounts or per-person authentication.
-- Email invites or notifications.
+- Email invitations.
 - Realtime updates.
 - Role-based admin access.
 - Hard-delete tooling in the UI.
@@ -55,9 +56,12 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 DATABASE_URL=
 ADMIN_PASSWORD=
 ADMIN_SESSION_SECRET=
+RESEND_API_KEY=
+NOTIFICATION_FROM_EMAIL=
+CRON_SECRET=
 ```
 
-`NEXT_PUBLIC_SITE_URL` is public. Keep `DATABASE_URL`, `ADMIN_PASSWORD`, and `ADMIN_SESSION_SECRET` private and server-side.
+`NEXT_PUBLIC_SITE_URL` is public. Keep every other value private and server-side. `NOTIFICATION_FROM_EMAIL` must use a sender accepted by Resend.
 
 ## Drizzle Commands
 
@@ -79,7 +83,7 @@ npm run build
 npm run check
 ```
 
-`npm run check` runs lint, typecheck, and build.
+`npm run check` runs lint, typecheck, tests, and a production build.
 
 ## Deployment
 

@@ -3,7 +3,12 @@ import "server-only";
 import { and, desc, eq, inArray, isNull } from "drizzle-orm";
 
 import { getDb } from "@/db";
-import { dateSuggestions, events, votes } from "@/db/schema";
+import {
+  dateSuggestions,
+  events,
+  eventSubscribers,
+  votes
+} from "@/db/schema";
 import { isEventSearchCode } from "@/lib/eventSearch";
 import { generateMemorableEventSearchCode } from "@/lib/eventSearchWords";
 import type {
@@ -19,6 +24,8 @@ import {
   validateEventDescription,
   validateEventTitle,
   validateName,
+  validateNotificationInterval,
+  validateOptionalEmail,
   validateTime,
   validateUuid
 } from "@/lib/validation";
@@ -128,6 +135,8 @@ export async function createEvent(input: {
   creatorName: string;
   suggestedDate: string;
   suggestedTime: string;
+  notificationEmail?: string | null;
+  notificationIntervalHours?: string;
 }): Promise<{ id: string }> {
   const title = getValidatedValue(validateEventTitle(input.title));
   const description = getValidatedValue(
@@ -136,6 +145,14 @@ export async function createEvent(input: {
   const creatorName = getValidatedValue(validateName(input.creatorName));
   const suggestedDate = getValidatedValue(validateDate(input.suggestedDate));
   const suggestedTime = getValidatedValue(validateTime(input.suggestedTime));
+  const notificationEmail = getValidatedValue(
+    validateOptionalEmail(input.notificationEmail)
+  );
+  const notificationIntervalHours = notificationEmail
+    ? getValidatedValue(
+        validateNotificationInterval(input.notificationIntervalHours ?? "")
+      )
+    : null;
 
   if (!suggestedTime) {
     throw new Error("Tid krävs.");
@@ -180,6 +197,14 @@ export async function createEvent(input: {
             target: [votes.suggestionId, votes.voterName],
             set: { choice: "yes" }
           });
+
+        if (notificationEmail && notificationIntervalHours) {
+          await tx.insert(eventSubscribers).values({
+            eventId: event.id,
+            email: notificationEmail,
+            intervalHours: notificationIntervalHours
+          });
+        }
 
         return event;
       });
