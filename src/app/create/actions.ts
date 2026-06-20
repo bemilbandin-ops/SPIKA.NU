@@ -34,6 +34,7 @@ export async function createEventAction(
       creatorName: readString(formData, "creatorName"),
       suggestedDate: readString(formData, "suggestedDate"),
       suggestedTime: readString(formData, "suggestedTime"),
+      votingClosesAt: readString(formData, "votingClosesAt"),
       notificationEmail: readString(formData, "notificationEmail"),
       notificationIntervalHours: readString(
         formData,

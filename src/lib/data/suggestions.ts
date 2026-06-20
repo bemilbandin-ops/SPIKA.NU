@@ -11,6 +11,7 @@ import {
   validateTime,
   validateUuid
 } from "@/lib/validation";
+import { isVotingClosed } from "@/lib/votingDeadline";
 
 function throwDataError(action: string, error: unknown): never {
   console.error(`Database error while ${action}.`, {
@@ -34,13 +35,20 @@ export async function addDateSuggestion(input: {
   try {
     await getDb().transaction(async (tx) => {
       const [event] = await tx
-        .select({ id: events.id })
+        .select({
+          id: events.id,
+          votingClosesAt: events.votingClosesAt
+        })
         .from(events)
         .where(and(eq(events.id, eventId), isNull(events.deletedAt)))
         .limit(1);
 
       if (!event) {
         throw new Error("Planeringen hittades inte.");
+      }
+
+      if (isVotingClosed(event.votingClosesAt)) {
+        throw new Error("Röstningen är stängd.");
       }
 
       const [suggestion] = await tx
@@ -75,6 +83,10 @@ export async function addDateSuggestion(input: {
         .where(eq(events.id, eventId));
     });
   } catch (error) {
+    if (error instanceof Error && error.message === "Röstningen är stängd.") {
+      throw error;
+    }
+
     throwDataError("adding date suggestion", error);
   }
 }

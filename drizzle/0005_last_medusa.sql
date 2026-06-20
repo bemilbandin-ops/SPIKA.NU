@@ -1,0 +1,1 @@
+ALTER TABLE "events" ADD COLUMN "voting_closes_at" timestamp with time zone;

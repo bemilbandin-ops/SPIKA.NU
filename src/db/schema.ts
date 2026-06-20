@@ -22,6 +22,7 @@ export const events = pgTable(
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
+    votingClosesAt: timestamp("voting_closes_at", { withTimezone: true }),
     deletedAt: timestamp("deleted_at", { withTimezone: true }),
     notificationActivityAt: timestamp("notification_activity_at", {
       withTimezone: true

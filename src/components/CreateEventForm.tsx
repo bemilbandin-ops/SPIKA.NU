@@ -96,6 +96,18 @@ export function CreateEventForm() {
         E-post är valfritt och skickas bara när planeringen ändras.
       </p>
 
+      <label className="ui-label">
+        Sista dagen för röstning (valfritt)
+        <input
+          type="datetime-local"
+          name="votingClosesAt"
+          className="ui-input text-base normal-case tracking-normal"
+        />
+        <span className="ui-field-copy">
+          Svensk tid. Efter detta går det inte att rösta eller föreslå datum.
+        </span>
+      </label>
+
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="ui-label">
           Föreslaget datum
